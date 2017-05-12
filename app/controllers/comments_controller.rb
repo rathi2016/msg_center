@@ -1,11 +1,8 @@
 class CommentsController < ApplicationController
-  before_action :find_msg, only: [:edit, :update, :destroy]
-
-  def new
-  end
-
+  before_action :find_msg
+  before_action :find_comment, only: [:edit, :update, :destroy]
+  before_action :authenticate_user!
   def create
-    @message = Message.find(params[:message_id])
     @comment = @message.comments.create(comment_params)
     @comment.user_id = current_user.id
 
@@ -29,8 +26,10 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-
+    @comment.destroy
+    redirect_to message_path(@message)
   end
+
   private
 
   def comment_params

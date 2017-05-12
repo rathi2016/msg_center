@@ -5,7 +5,7 @@ class MessagesController < ApplicationController
   end
 
   def new
-    @message = Message.new
+    @message = current_user.messages.build
   end
 
   def show
@@ -13,7 +13,7 @@ class MessagesController < ApplicationController
   end
 
   def create
-    @message = Message.new(message_params)
+    @message = current_user.messages.build(message_params)
     if @message.save
       redirect_to root_path
     else
@@ -28,10 +28,12 @@ class MessagesController < ApplicationController
        redirect_to message_path
      else
        render 'edit'
-     end 
+     end
    end
 
    def destroy
+     @message.destroy
+     redirect_to root_path
    end
 
   private
@@ -43,4 +45,5 @@ class MessagesController < ApplicationController
   def find_message
     @message = Message.find(params[:id])
   end
+
 end
